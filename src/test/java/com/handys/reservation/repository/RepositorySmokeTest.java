@@ -5,7 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,6 +18,7 @@ class RepositorySmokeTest {
     @Autowired RoomInventoryRepository roomInventoryRepository;
     @Autowired ReservationRepository reservationRepository;
     @Autowired OutboxEventRepository outboxEventRepository;
+    @Autowired TransactionTemplate transactionTemplate;
 
     @AfterEach
     void cleanUp() {
@@ -27,13 +28,14 @@ class RepositorySmokeTest {
     }
 
     @Test
-    @Transactional
     void 세_엔티티_모두_저장하고_조회할_수_있다() {
         String roomTypeId = "SMOKE_" + UUID.randomUUID();
         LocalDate stayDate = LocalDate.of(2030, 1, 1);
 
         RoomInventory inventory = roomInventoryRepository.save(new RoomInventory(roomTypeId, stayDate, 3));
-        assertThat(roomInventoryRepository.findForUpdate(roomTypeId, stayDate)).isPresent();
+        boolean found = transactionTemplate.execute(status ->
+                roomInventoryRepository.findForUpdate(roomTypeId, stayDate).isPresent());
+        assertThat(found).isTrue();
 
         Reservation reservation = reservationRepository.save(
                 new Reservation("AIRBNB", "SMOKE-EXT-" + UUID.randomUUID(), roomTypeId, stayDate, false));

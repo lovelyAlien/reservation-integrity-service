@@ -77,4 +77,17 @@ public class OutboxEvent {
     public int getMaxRetry() { return maxRetry; }
     public LocalDateTime getNextRetryAt() { return nextRetryAt; }
     public String getLastError() { return lastError; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OutboxEvent)) return false;
+        OutboxEvent that = (OutboxEvent) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
