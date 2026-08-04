@@ -2,10 +2,12 @@
 # 커밋 메시지 규칙 강제:
 #   1) 한글 포함 (한글로 작성)
 #   2) AI 출처/서명 트레일러 금지 (Co-Authored-By 등)
+#   3) Conventional Commits 형식 (type(scope): 설명)
 set -euo pipefail
 
 msg_file="$1"
 msg="$(cat "$msg_file")"
+first_line="$(printf '%s\n' "$msg" | head -n1)"
 
 if echo "$msg" | grep -Eqi 'co-authored-by|generated[- ]with|claude code|🤖'; then
   echo "오류: 커밋 메시지에 AI 출처/서명 트레일러를 포함할 수 없습니다." >&2
@@ -15,6 +17,13 @@ fi
 
 if ! perl -CSD -ne '$found=1 if /[\x{AC00}-\x{D7A3}]/; END { exit($found ? 0 : 1) }' <<< "$msg"; then
   echo "오류: 커밋 메시지는 한글로 작성해야 합니다." >&2
+  exit 1
+fi
+
+if ! echo "$first_line" | grep -Eq '^(feat|fix|docs|style|refactor|test|chore|perf|build|ci)(\([a-zA-Z0-9._/-]+\))?!?: .+'; then
+  echo "오류: 커밋 메시지 첫 줄은 Conventional Commits 형식을 따라야 합니다." >&2
+  echo "      형식: type(scope): 설명   예) feat: 로그인 API 추가 / fix(auth): 토큰 만료 버그 수정" >&2
+  echo "      허용 타입: feat fix docs style refactor test chore perf build ci" >&2
   exit 1
 fi
 
