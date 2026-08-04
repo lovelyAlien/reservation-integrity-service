@@ -1,0 +1,9 @@
+{
+  "name": "reservation-integrity-service-tooling",
+  "private": true,
+  "description": "Node-only tooling for this repo (commitlint). The application itself is Java/Gradle.",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0"
+  }
+}

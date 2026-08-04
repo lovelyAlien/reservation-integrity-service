@@ -15,5 +15,8 @@ build/
 HELP.md
 *.log
 
+# Node (commitlint tooling)
+node_modules/
+
 # OS
 Thumbs.db
