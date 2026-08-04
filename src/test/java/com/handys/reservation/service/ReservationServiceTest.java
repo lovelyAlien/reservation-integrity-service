@@ -120,7 +120,8 @@ class ReservationServiceTest {
         when(reservationRepository.findByChannelAndExternalReservationId(CHANNEL, EXTERNAL_ID))
                 .thenReturn(Optional.empty());
         when(reservationRepository.saveAndFlush(any(Reservation.class)))
-                .thenThrow(new DataIntegrityViolationException("unique violation"));
+                .thenThrow(new DataIntegrityViolationException(
+                        "ERROR: duplicate key value violates unique constraint \"uq_reservation_channel_external\""));
 
         assertThatThrownBy(() -> reservationService.reserve(command()))
                 .isInstanceOf(DuplicateReservationConflictException.class);

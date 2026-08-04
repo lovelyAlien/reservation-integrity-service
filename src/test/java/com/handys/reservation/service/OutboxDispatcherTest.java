@@ -35,7 +35,7 @@ class OutboxDispatcherTest {
     void cleanUp() {
         outboxEventRepository.deleteAll();
         reservationRepository.deleteAll();
-        roomInventoryRepository.deleteAll();
+        roomInventoryRepository.deleteByRoomTypeIdNotIn(List.of("DELUXE_A", "STANDARD_B"));
     }
 
     @Test

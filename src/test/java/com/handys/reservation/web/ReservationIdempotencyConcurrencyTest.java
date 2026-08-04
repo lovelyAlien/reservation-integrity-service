@@ -35,7 +35,7 @@ class ReservationIdempotencyConcurrencyTest {
     void cleanUp() {
         outboxEventRepository.deleteAll();
         reservationRepository.deleteAll();
-        roomInventoryRepository.deleteAll();
+        roomInventoryRepository.deleteByRoomTypeIdNotIn(List.of("DELUXE_A", "STANDARD_B"));
     }
 
     @Test
@@ -76,5 +76,6 @@ class ReservationIdempotencyConcurrencyTest {
         assertThat(createdCount.get()).isEqualTo(1);
         assertThat(reservationRepository.findByChannelAndExternalReservationId("AIRBNB", externalId)).isPresent();
         assertThat(reservationRepository.count()).isEqualTo(1);
+        assertThat(roomInventoryRepository.findByRoomTypeIdAndStayDate(roomTypeId, stayDate).orElseThrow().getAvailableStock()).isEqualTo(9);
     }
 }

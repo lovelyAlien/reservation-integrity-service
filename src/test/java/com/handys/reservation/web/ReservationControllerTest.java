@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +35,7 @@ class ReservationControllerTest {
     void cleanUp() {
         outboxEventRepository.deleteAll();
         reservationRepository.deleteAll();
-        roomInventoryRepository.deleteAll();
+        roomInventoryRepository.deleteByRoomTypeIdNotIn(List.of("DELUXE_A", "STANDARD_B"));
     }
 
     private String seedInventory(int stock) {

@@ -54,7 +54,11 @@ public class ReservationService {
                     new Reservation(command.channel(), command.externalReservationId(),
                             command.roomTypeId(), command.stayDate(), command.simulateDownstreamFailure()));
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateReservationConflictException(command.channel(), command.externalReservationId());
+            String rootMessage = org.springframework.core.NestedExceptionUtils.getMostSpecificCause(e).getMessage();
+            if (rootMessage != null && rootMessage.contains("uq_reservation_channel_external")) {
+                throw new DuplicateReservationConflictException(command.channel(), command.externalReservationId());
+            }
+            throw e;
         }
 
         outboxEventRepository.save(new OutboxEvent(reservation.getId(), OutboxEventType.DOOR_LOCK_ISSUE));

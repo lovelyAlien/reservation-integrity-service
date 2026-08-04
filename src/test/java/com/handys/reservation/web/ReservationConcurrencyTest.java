@@ -35,7 +35,7 @@ class ReservationConcurrencyTest {
     void cleanUp() {
         outboxEventRepository.deleteAll();
         reservationRepository.deleteAll();
-        roomInventoryRepository.deleteAll();
+        roomInventoryRepository.deleteByRoomTypeIdNotIn(List.of("DELUXE_A", "STANDARD_B"));
     }
 
     @Test
@@ -78,5 +78,7 @@ class ReservationConcurrencyTest {
 
         assertThat(successCount.get()).isEqualTo(1);
         assertThat(soldOutCount.get()).isEqualTo(requestCount - 1);
+        assertThat(roomInventoryRepository.findByRoomTypeIdAndStayDate(roomTypeId, stayDate).orElseThrow().getAvailableStock()).isEqualTo(0);
+        assertThat(reservationRepository.countByRoomTypeId(roomTypeId)).isEqualTo(1);
     }
 }

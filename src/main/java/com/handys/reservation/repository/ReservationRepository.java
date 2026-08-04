@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Optional<Reservation> findByChannelAndExternalReservationId(String channel, String externalReservationId);
+
+    long countByRoomTypeId(String roomTypeId);
 }
