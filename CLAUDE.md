@@ -9,3 +9,9 @@
   허용 타입: `feat fix docs style refactor test chore perf build ci`
 - 위 규칙은 `.githooks/commit-msg` 훅으로 강제된다 (최초 1회 `git config core.hooksPath .githooks` 필요).
   이 저장소의 기존 커밋(타입 접두사 없음)은 소급 적용되지 않으며, 이후 커밋부터 적용된다.
+
+## 문서화된 학습
+
+`docs/solutions/` — 과거에 해결한 문제(버그, 베스트 프랙티스, 워크플로우 패턴)를 카테고리별로
+정리한 문서 모음. YAML frontmatter(`module`, `tags`, `problem_type`)로 검색 가능하며,
+관련 영역에서 구현하거나 디버깅할 때 참고할 만하다.
