@@ -26,14 +26,17 @@ CREATE TABLE room_inventory (
 );
 
 -- 예약. (channel, external_reservation_id) 유니크 제약이 멱등성의 최종 방어선.
+-- simulate_downstream_failure: 실제 도어락/정산 시스템이 없는 상태에서 outbox 재시도 로직을
+-- 테스트/데모로 검증하기 위한 필드 (API 명세의 simulateDownstreamFailure와 대응).
 CREATE TABLE reservation (
-    id                       BIGSERIAL PRIMARY KEY,
-    channel                  VARCHAR(30)  NOT NULL,
-    external_reservation_id  VARCHAR(100) NOT NULL,
-    room_type_id             VARCHAR(50)  NOT NULL,
-    stay_date                DATE         NOT NULL,
-    status                   VARCHAR(20)  NOT NULL,
-    created_at               TIMESTAMP    NOT NULL DEFAULT now(),
+    id                           BIGSERIAL PRIMARY KEY,
+    channel                      VARCHAR(30)  NOT NULL,
+    external_reservation_id      VARCHAR(100) NOT NULL,
+    room_type_id                 VARCHAR(50)  NOT NULL,
+    stay_date                    DATE         NOT NULL,
+    status                       VARCHAR(20)  NOT NULL,
+    simulate_downstream_failure  BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at                   TIMESTAMP    NOT NULL DEFAULT now(),
     CONSTRAINT uq_reservation_channel_external UNIQUE (channel, external_reservation_id)
 );
 
