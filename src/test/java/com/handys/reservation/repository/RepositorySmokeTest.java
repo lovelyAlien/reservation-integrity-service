@@ -13,7 +13,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 class RepositorySmokeTest {
 
     @Autowired RoomInventoryRepository roomInventoryRepository;
@@ -28,6 +27,7 @@ class RepositorySmokeTest {
     }
 
     @Test
+    @Transactional
     void 세_엔티티_모두_저장하고_조회할_수_있다() {
         String roomTypeId = "SMOKE_" + UUID.randomUUID();
         LocalDate stayDate = LocalDate.of(2030, 1, 1);
