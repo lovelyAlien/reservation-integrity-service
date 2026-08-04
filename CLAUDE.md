@@ -20,3 +20,9 @@
 `docs/solutions/` — 과거에 해결한 문제(버그, 베스트 프랙티스, 워크플로우 패턴)를 카테고리별로
 정리한 문서 모음. YAML frontmatter(`module`, `tags`, `problem_type`)로 검색 가능하며,
 관련 영역에서 구현하거나 디버깅할 때 참고할 만하다.
+
+이 저장소의 문서(PROBLEM.md, DESIGN.md, README.md, `docs/solutions/` 등)는 한글로 작성한다.
+`docs/solutions/`의 YAML frontmatter 중 `problem_type`/`component`/`root_cause`/`resolution_type`/
+`severity`는 ce-compound 스키마가 정한 영문 enum 값을 그대로 써야 하고, `tags`/`related_components`도
+검색 키워드이므로 영문 kebab-case를 유지한다 — 이 필드들을 제외한 `title`, `symptoms`, 본문 프로즈는
+한글로 작성한다. 코드 블록, 파일 경로, `file:line` 인용, 클래스/메서드명은 원문(영문/코드) 그대로 둔다.
