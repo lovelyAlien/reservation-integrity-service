@@ -51,7 +51,7 @@ The underlying persistence effect of the missing transaction: with `spring.jpa.o
 
 ## Solution
 
-Fixed in commit `acdb654`. The per-event transactional logic was extracted out of `OutboxDispatcher` into a new `@Component` bean, `OutboxEventProcessor`, so that the call from the scheduler crosses a genuine Spring proxy boundary.
+Fixed in commit `255598c`. The per-event transactional logic was extracted out of `OutboxDispatcher` into a new `@Component` bean, `OutboxEventProcessor`, so that the call from the scheduler crosses a genuine Spring proxy boundary.
 
 `src/main/java/com/handys/reservation/service/OutboxDispatcher.java:24-35`:
 
