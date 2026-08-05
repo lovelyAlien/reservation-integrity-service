@@ -24,36 +24,7 @@ flowchart LR
     Client["운영자"] -->|"GET /api/outbox-events?status=FAILED"| Controller
 ```
 
-**데이터 모델**: `room_inventory`↔`reservation`은 `room_type_id`+`stay_date`로만 연관되는 논리적 관계고(FK 아님), `outbox_event`→`reservation`만 실제 FK다.
-
-```mermaid
-erDiagram
-    ROOM_INVENTORY ||..o{ RESERVATION : "room_type_id + stay_date로 연관 (FK 아님)"
-    RESERVATION ||--o{ OUTBOX_EVENT : "확정 시 2건 발행"
-
-    ROOM_INVENTORY {
-        bigint id PK
-        string room_type_id
-        date stay_date
-        int total_stock
-        int available_stock
-    }
-    RESERVATION {
-        bigint id PK
-        string channel
-        string external_reservation_id
-        string room_type_id
-        date stay_date
-        string status
-    }
-    OUTBOX_EVENT {
-        bigint id PK
-        bigint reservation_id FK
-        string event_type
-        string status
-        int retry_count
-    }
-```
+**데이터 모델**: `room_inventory`↔`reservation`은 `room_type_id`+`stay_date`로만 연관되는 논리적 관계고(FK 아님), `outbox_event`→`reservation`만 실제 FK다. 상세 스키마는 [DESIGN.md](./DESIGN.md#데이터-모델) 참고.
 
 ## 실행 방법
 
@@ -71,16 +42,8 @@ docker-compose up -d
 ./gradlew test
 ```
 
-**테스트 구성 (13개, 6개 클래스)**
-
-```mermaid
-pie title 테스트 구성 (13개)
-    "핵심 로직 단위 테스트" : 5
-    "REST API 통합 테스트" : 4
-    "동시성/멱등성 증명 테스트" : 2
-    "Outbox 재시도 테스트" : 1
-    "리포지토리 스모크 테스트" : 1
-```
+총 13개 테스트(6개 클래스): 핵심 로직 단위 테스트 5, REST API 통합 테스트 4,
+동시성/멱등성 증명 테스트 2, Outbox 재시도 테스트 1, 리포지토리 스모크 테스트 1.
 
 동시성 증명 테스트 1건은 재고 1개를 두고 50개 요청을 동시에 보내 정확히 1건만 성공하는지,
 멱등성 증명 테스트 1건은 같은 웹훅 20개를 동시에 보내 정확히 1건만 반영되는지를
